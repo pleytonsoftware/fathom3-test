@@ -9,6 +9,7 @@ export interface SignInInput {
 export interface SignInOutput {
     user: UserWithoutPassword;
     token: string;
+    expiryDate: Date;
 }
 
 export interface IUserAuthToken {

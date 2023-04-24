@@ -58,6 +58,42 @@ class SessionService {
 
         return session.userId === userId;
     }
+
+    public async findAllSessionsForUser(
+        userId: number,
+    ): Promise<Array<Session>> {
+        if (!userId) {
+            return [];
+        }
+
+        const sessions = await prisma.session.findMany({
+            where: {
+                userId,
+            },
+        });
+
+        return sessions;
+    }
+
+    public async deleteManySessions(
+        userId: number,
+        sessionIds: Array<number>,
+    ): Promise<boolean> {
+        if (!userId || !(sessionIds?.length > 0)) {
+            return false;
+        }
+
+        const result = await prisma.session.deleteMany({
+            where: {
+                userId,
+                id: {
+                    in: sessionIds,
+                },
+            },
+        });
+
+        return result.count > 0;
+    }
 }
 
 export default SessionService;

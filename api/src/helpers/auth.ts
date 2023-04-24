@@ -101,7 +101,6 @@ export const checkValidUser: preHandlerHookHandler = async (
             return replyWith(reply, { code: statusCodes.UNAUTHORIZED });
         }
 
-        // TODO check token in session if assigned to user, if deleted, send bad request
         const sessionIsAlive = await sessionService.checkSessionIsAlive(
             user.id,
             token,

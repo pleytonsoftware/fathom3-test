@@ -29,5 +29,7 @@ export const validatePassword = (
                 password2,
             },
         });
+        return true;
     }
+    return false;
 };

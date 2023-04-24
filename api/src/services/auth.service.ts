@@ -68,13 +68,13 @@ class AuthService {
             return null;
         }
 
-        const expireDate = new Date(Date.now() + JWT_EXPIRES_IN_MS);
+        const expiryDate = new Date(Date.now() + JWT_EXPIRES_IN_MS);
         const token = await this.generateToken(user);
 
         const session = await this.sessionService.createSession(
             user,
             token,
-            expireDate,
+            expiryDate,
         );
 
         if (!session) {
@@ -84,6 +84,7 @@ class AuthService {
         return {
             user: excludePassword(user)!,
             token,
+            expiryDate,
         };
     }
 

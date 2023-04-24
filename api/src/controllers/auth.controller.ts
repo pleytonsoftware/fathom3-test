@@ -1,5 +1,8 @@
 import type { RouteHandlerMethod } from "fastify";
-import type { SignInInput as SignInInputType } from "../@types/routes/auth";
+import type {
+    IUserRequest,
+    SignInInput as SignInInputType,
+} from "../@types/routes/auth";
 import type UserInput from "../@types/models/user/input";
 import AuthService from "../services/auth.service";
 import Container from "typedi";
@@ -17,12 +20,19 @@ export const signin: RouteHandlerMethod = async (req, reply) => {
     reply.send(signInOutput);
 };
 
+export const verify: RouteHandlerMethod = async (req, reply) => {
+    const user = (req as IUserRequest).authUser;
+    reply.send(user);
+};
+
 export const signup: RouteHandlerMethod = async (req, reply) => {
     const userService = Container.get(UserService);
     const { email, password, repeatPassword, firstName, lastName } =
         req.body as UserInput;
 
-    validatePassword(password, repeatPassword, reply);
+    if (validatePassword(password, repeatPassword, reply)) {
+        return;
+    }
 
     try {
         const userExists = await userService.findByEmail(email, {
@@ -30,7 +40,7 @@ export const signup: RouteHandlerMethod = async (req, reply) => {
         });
 
         if (userExists) {
-            reply
+            return reply
                 .code(statusCodes.NOT_FOUND)
                 .send({ message: "User already exists", data: email });
         }
