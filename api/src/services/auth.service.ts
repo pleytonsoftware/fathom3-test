@@ -10,6 +10,7 @@ import type { User } from "@prisma/client";
 import SessionService from "./session.service";
 import { SignInOutput } from "../@types/routes/auth";
 import { excludePassword } from "../helpers/user";
+import statusCodes from "http-status-codes";
 
 const JWT_EXPIRES_IN_MS = ms("1d");
 

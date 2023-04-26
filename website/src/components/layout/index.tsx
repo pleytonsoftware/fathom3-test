@@ -1,18 +1,26 @@
-import { FC, PropsWithChildren } from "react";
+import { FC, PropsWithChildren, useState } from "react";
 import Navbar from "./navbar";
 import Footer, { footerHeight } from "./footer";
-import { Box, Fab } from "@mui/material";
+import { Box, Fab, lighten } from "@mui/material";
 import useAppBarHeight from "@/hooks/useAppBarheight";
 import { COLORS } from "@/helpers/theme";
 import AddIcon from "@mui/icons-material/Add";
-import { useAuthContext } from "../context";
+import { useAuthContext } from "../context/auth";
 import Head from "next/head";
+import dynamic from "next/dynamic";
+
+const CreatePostDialog = dynamic(() => import("../posts/create"));
 
 interface LayoutProps extends PropsWithChildren {}
 
 const Layout: FC<LayoutProps> = ({ children }) => {
+    const [createPostDialogIsOpen, setCreatePostDialogOpen] =
+        useState<boolean>(false);
     const appBarHeight = useAppBarHeight();
     const { auth } = useAuthContext();
+
+    const closeCreatePostDialog = () => setCreatePostDialogOpen(false);
+    const openCreatePostDialog = () => setCreatePostDialogOpen(true);
 
     return (
         <>
@@ -39,20 +47,33 @@ const Layout: FC<LayoutProps> = ({ children }) => {
                         lg: 8,
                     },
                     height: "100%",
+                    marginTop: `${appBarHeight}px`,
                     minHeight: `calc(100vh - ${appBarHeight}px - ${footerHeight}px)`,
-                    background: COLORS.QUATERNARY,
+                    background: lighten(COLORS.QUATERNARY, 0.25),
                     position: "relative",
                 })}
             >
                 {auth.user && (
-                    <Fab
-                        aria-label="Add"
-                        color="primary"
-                        sx={{ position: "absolute", bottom: 16, right: 16 }}
-                        // TODO action open modal to create post
-                    >
-                        <AddIcon />
-                    </Fab>
+                    <>
+                        <Fab
+                            aria-label="Add"
+                            color="primary"
+                            sx={{
+                                position: "fixed",
+                                bottom: 42,
+                                right: 42,
+                                color: (theme) => theme.palette.common.white,
+                            }}
+                            onClick={openCreatePostDialog}
+                        >
+                            <AddIcon />
+                        </Fab>
+                        <CreatePostDialog
+                            open={createPostDialogIsOpen}
+                            onClose={closeCreatePostDialog}
+                            onSuccess={closeCreatePostDialog}
+                        />
+                    </>
                 )}
                 {children}
             </Box>

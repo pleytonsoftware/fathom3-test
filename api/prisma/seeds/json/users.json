@@ -1,0 +1,116 @@
+[
+    {
+        "email": "johndoe@example.com",
+        "password": "mysecurepassword",
+        "firstName": "John",
+        "lastName": "Doe"
+    },
+    {
+        "email": "janedoe@example.com",
+        "password": "mypassword123",
+        "firstName": "Jane",
+        "lastName": "Doe"
+    },
+    {
+        "email": "mikejones@example.com",
+        "password": "mypass456",
+        "firstName": "Mike",
+        "lastName": "Jones"
+    },
+    {
+        "email": "sarahsmith@example.com",
+        "password": "mysecretpass",
+        "firstName": "Sarah",
+        "lastName": "Smith"
+    },
+    {
+        "email": "davidbrown@example.com",
+        "password": "mypassword789",
+        "firstName": "David",
+        "lastName": "Brown"
+    },
+    {
+        "email": "lisaadams@example.com",
+        "password": "mypassword789",
+        "firstName": "Lisa",
+        "lastName": "Adams"
+    },
+    {
+        "email": "tomwilson@example.com",
+        "password": "mypass1234",
+        "firstName": "Tom",
+        "lastName": "Wilson"
+    },
+    {
+        "email": "jessicamiller@example.com",
+        "password": "mysecurepass123",
+        "firstName": "Jessica",
+        "lastName": "Miller"
+    },
+    {
+        "email": "chrisharris@example.com",
+        "password": "mypasswordxyz",
+        "firstName": "Chris",
+        "lastName": "Harris"
+    },
+    {
+        "email": "katiejohnson@example.com",
+        "password": "mypassword1234",
+        "firstName": "Katie",
+        "lastName": "Johnson"
+    },
+    {
+        "email": "michaelgreen@example.com",
+        "password": "mysecretpassword",
+        "firstName": "Michael",
+        "lastName": "Green"
+    },
+    {
+        "email": "susanlee@example.com",
+        "password": "mypass789",
+        "firstName": "Susan",
+        "lastName": "Lee"
+    },
+    {
+        "email": "kevindavis@example.com",
+        "password": "mypasswordqwe",
+        "firstName": "Kevin",
+        "lastName": "Davis"
+    },
+    {
+        "email": "jacobtaylor@example.com",
+        "password": "mypassword12345",
+        "firstName": "Jacob",
+        "lastName": "Taylor"
+    },
+    {
+        "email": "rachelgarcia@example.com",
+        "password": "mysecretpass321",
+        "firstName": "Rachel",
+        "lastName": "Garcia"
+    },
+    {
+        "email": "brandonhernandez@example.com",
+        "password": "mypassword098",
+        "firstName": "Brandon",
+        "lastName": "Hernandez"
+    },
+    {
+        "email": "olivialopez@example.com",
+        "password": "mypasswordqaz",
+        "firstName": "Olivia",
+        "lastName": "Lopez"
+    },
+    {
+        "email": "nathanthomas@example.com",
+        "password": "mysecretpass789",
+        "firstName": "Nathan",
+        "lastName": "Thomas"
+    },
+    {
+        "email": "amandasmith@example.com",
+        "password": "mypassword555",
+        "firstName": "Amanda",
+        "lastName": "Smith"
+    }
+]

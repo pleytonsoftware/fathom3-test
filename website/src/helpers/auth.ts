@@ -1,11 +1,11 @@
 import Cookies from "js-cookie";
 import { PAGES, TOKEN_NAME } from "./constants";
-import type { SignInDataReturn } from "@/@types/auth/signin";
 import { Dispatch } from "react";
 import { NextRouter } from "next/router";
-import { Action } from "@/components/context";
+import { Action } from "@/components/context/auth";
 import type { GetServerSidePropsContext } from "next";
 import NextCookies from "next-cookies";
+import type { SignInDataReturn } from "@/@types/auth/signin";
 
 export const formatToken = (token: string | null | undefined) =>
     token ? `Bearer ${token}` : undefined;
@@ -19,6 +19,7 @@ export const onSuccessAuth = (
     setError(null);
     Cookies.set(TOKEN_NAME, data.token, {
         expires: new Date(data.expiryDate),
+        secure: true,
     });
     dispatch({
         type: "LOGIN",

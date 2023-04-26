@@ -1,5 +1,3 @@
-import type User from "../../@types/model/user";
-import type { ErrorResponse } from "@/@types/api/error";
 import type { AxiosError } from "axios";
 import { QueryObserverBaseResult, useQuery } from "@tanstack/react-query";
 import {
@@ -10,10 +8,15 @@ import {
     useEffect,
     useReducer,
 } from "react";
-import axios from "axios";
-import { API_INTERNAL_ENDPOINTS, TOKEN_NAME } from "@/helpers/constants";
+import { TOKEN_NAME } from "@/helpers/constants";
 import { formatToken } from "@/helpers/auth";
 import Cookies from "js-cookie";
+import type User from "@/@types/model/user";
+import type { ErrorResponse } from "@/@types/api/error";
+import NextCookies from "next-cookies";
+import type { GetServerSidePropsContext } from "next";
+import useVerifyToken from "@/hooks/queries/useVerifyToken";
+import useSignOut from "@/hooks/mutations/useSignOut";
 
 export type Action =
     | { type: "LOGIN"; user: User }
@@ -33,6 +36,7 @@ type UserContextType = {
         AxiosError<ErrorResponse>
     >["refetch"];
     isFetched: boolean;
+    signOut: () => Promise<void>;
 };
 
 const initialState: Auth = {
@@ -58,12 +62,19 @@ export const UserContext = createContext<UserContextType>({
     dispatch: () => null,
     refetchAuth: async () => null as any,
     isFetched: false,
+    signOut: async () => {},
 });
 
 export const useAuthContext = () => useContext(UserContext);
 
-export const getHeadersWithToken = () => {
-    const token = Cookies.get(TOKEN_NAME);
+export const getHeadersWithToken = (context?: GetServerSidePropsContext) => {
+    let token;
+
+    if (typeof window === "undefined" && context) {
+        token = NextCookies(context)[TOKEN_NAME];
+    } else {
+        token = Cookies.get(TOKEN_NAME);
+    }
 
     return {
         ...(token
@@ -76,37 +87,22 @@ export const getHeadersWithToken = () => {
 
 const UserProvider: FC<PropsWithChildren> = ({ children }) => {
     const [state, dispatch] = useReducer(userReducer, initialState);
-    const token = Cookies.get(TOKEN_NAME);
 
-    const { isFetching, isRefetching, refetch, isFetched } = useQuery<
-        User,
-        AxiosError<ErrorResponse>
-    >({
-        queryKey: ["authUser"], // TODO move to constants
-        queryFn: async () => {
-            const verifyResult = await axios.get(
-                API_INTERNAL_ENDPOINTS.verify,
-                {
-                    headers: getHeadersWithToken(),
-                },
-            );
-            return verifyResult.data;
-        },
-        onSuccess: (data) => {
-            dispatch({
-                type: "LOGIN",
-                user: data,
-            });
-        },
-        onError: () => {
-            dispatch({
-                type: "LOGOUT",
-            });
-        },
-        retryOnMount: false,
-        retry: false,
-        refetchOnWindowFocus: false,
-    });
+    const signOutMutation = useSignOut();
+    const dispatchSignOut = () => {
+        Cookies.remove(TOKEN_NAME);
+        dispatch({
+            type: "LOGOUT",
+        });
+    };
+    const signOut = async () => {
+        await signOutMutation.mutateAsync();
+        dispatchSignOut();
+    };
+    const { isFetching, isRefetching, refetch, isFetched } = useVerifyToken(
+        dispatch,
+        dispatchSignOut,
+    );
 
     useEffect(() => {
         if (isFetching && !isRefetching) {
@@ -118,7 +114,13 @@ const UserProvider: FC<PropsWithChildren> = ({ children }) => {
 
     return (
         <UserContext.Provider
-            value={{ auth: state, dispatch, refetchAuth: refetch, isFetched }}
+            value={{
+                auth: state,
+                dispatch,
+                signOut,
+                refetchAuth: refetch,
+                isFetched,
+            }}
         >
             {children}
         </UserContext.Provider>

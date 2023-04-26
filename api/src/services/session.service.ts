@@ -94,6 +94,20 @@ class SessionService {
 
         return result.count > 0;
     }
+
+    public async deleteSession(token: string): Promise<boolean> {
+        if (!token) {
+            return false;
+        }
+
+        const result = await prisma.session.delete({
+            where: {
+                token,
+            },
+        });
+
+        return true;
+    }
 }
 
 export default SessionService;

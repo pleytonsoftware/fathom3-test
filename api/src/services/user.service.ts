@@ -5,14 +5,20 @@ import prisma from "../prisma";
 import { Crypter } from "../helpers/crypter";
 import EditUserInput from "../@types/models/user/edit";
 import { excludePassword } from "../helpers/user";
-import { FindAllOptions } from "../@types/routes/input";
+import { PaginationQuery } from "../@types/routes/input";
 import log from "../helpers/logger";
+import { UserWithoutPassword } from "../@types/models/user/output";
+
+// TODO move to @types
+interface FindOptions {
+    excludeDeleted?: boolean;
+}
 
 @Service()
 class UserService {
     public async findByEmail(
         email: UserInput["email"],
-        { excludeDeleted }: { excludeDeleted?: boolean } = {},
+        { excludeDeleted }: FindOptions = {},
     ) {
         if (!email) {
             return null;
@@ -40,7 +46,7 @@ class UserService {
 
     public async findById(
         id: number,
-        { excludeDeleted }: { excludeDeleted?: boolean } = {},
+        { excludeDeleted = false }: FindOptions = {},
     ) {
         if (!id) {
             return null;
@@ -93,15 +99,46 @@ class UserService {
         return excludePassword(user);
     }
 
-    public async findAll(opts?: FindAllOptions) {
-        // TODO important!
-        // ! add pagination, filtering, sorting using `opts`
+    public async findAll(opts?: PaginationQuery): Promise<{
+        data: Array<UserWithoutPassword>;
+        total: number;
+    }> {
+        const { pagination, sortBy, filterBy } = opts ?? {};
+
+        const filtering = filterBy
+            ? {
+                  [filterBy.key]:
+                      typeof filterBy.value === "string"
+                          ? {
+                                contains: filterBy.value,
+                                mode: "insensitive",
+                            }
+                          : filterBy.value,
+              }
+            : {};
+
         const users = await prisma.user.findMany({
-            where: {
-                deleted: false,
-            },
+            where: filtering,
+            skip: pagination?.offset,
+            take: pagination?.size,
+            ...(sortBy
+                ? {
+                      orderBy: {
+                          [sortBy.field]: sortBy.direction,
+                      },
+                  }
+                : {}),
         });
-        return users.map((user) => excludePassword(user));
+        const total = await prisma.user.count({
+            where: filtering,
+        });
+
+        return {
+            data: users.map(
+                (user) => excludePassword(user) as UserWithoutPassword,
+            ),
+            total,
+        };
     }
 
     public async updateById(id: number, updatedFields: EditUserInput) {
@@ -110,10 +147,15 @@ class UserService {
             return null;
         }
 
+        const optionalRole = updatedFields.role
+            ? { role: updatedFields.role }
+            : {};
+
         const user = await prisma.user.update({
             data: {
                 firstName: updatedFields.firstName,
                 lastName: updatedFields.lastName,
+                ...optionalRole,
             },
             where: {
                 id,
@@ -125,7 +167,10 @@ class UserService {
 
     public async deleteById(id: number) {
         log.debug("deleteById(user) - id not found", id);
-        const user = await prisma.user.delete({
+        const user = await prisma.user.update({
+            data: {
+                deleted: true,
+            },
             where: {
                 id,
             },

@@ -1,0 +1,82 @@
+[
+    {
+        "id": 1,
+        "image": "https://fastly.picsum.photos/id/656/200/300.jpg?hmac=zNqhDDzELUTnZCZ7v7jsgm_qu5rVv4qCgahu6YqfG_A",
+        "title": "The Rise of E-commerce",
+        "content": "In recent years, e-commerce has become a major force in the retail industry. With the convenience of online shopping, more and more consumers are turning to the internet to make their purchases.",
+        "publishedAt": "2023-04-26T16:48:12.791Z",
+        "authorId": 3
+    },
+    {
+        "id": 2,
+        "image": "https://fastly.picsum.photos/id/954/200/200.jpg?hmac=U_V-b3xGbMM1KTSaB5KKqncFD4fmOVG5iK39Bjd9DoQ",
+        "title": "The Importance of Sleep",
+        "content": "Getting enough sleep is crucial for your overall health and well-being. It can improve your mood, increase your energy levels, and boost your immune system.",
+        "publishedAt": "2023-04-26T16:48:27.121Z",
+        "authorId": 1
+    },
+    {
+        "id": 3,
+        "image": "https://fastly.picsum.photos/id/848/200/200.jpg?hmac=9pGbbeC1Q-zsi7TeMrGb93-TjKBmqPVY-tYuubIIqyw",
+        "title": "The Future of Artificial Intelligence",
+        "content": "Artificial intelligence is rapidly advancing and is expected to have a major impact on many industries. From healthcare to finance to transportation, AI is poised to revolutionize the way we live and work.",
+        "publishedAt": "2023-04-26T16:48:41.534Z",
+        "authorId": 9
+    },
+    {
+        "id": 4,
+        "image": "https://fastly.picsum.photos/id/276/200/200.jpg?hmac=nEmegloU9V9ajpTC6GdgRRIz-d0EliWd5cQ-F1olB54",
+        "title": "The Benefits of Meditation",
+        "content": "Meditation can have a positive impact on both your physical and mental health. It can help reduce stress, improve focus, and promote overall well-being.",
+        "publishedAt": "2023-04-26T16:48:56.016Z",
+        "authorId": 5
+    },
+    {
+        "id": 5,
+        "image": "https://fastly.picsum.photos/id/505/200/200.jpg?hmac=c295sjTIAZ_9Gj-PENrzAbATNIiWPL1dmhIhWndYnyo",
+        "title": "The Power of Positive Thinking",
+        "content": "Positive thinking can help you overcome obstacles, reduce stress, and improve your overall well-being. By focusing on the good in your life, you can create a more positive outlook and achieve your goals.",
+        "publishedAt": "2023-04-26T17:05:31.235Z",
+        "authorId": 2
+    },
+    {
+        "id": 6,
+        "image": "https://fastly.picsum.photos/id/137/200/200.jpg?hmac=qhNK8PzcRQJaCJlGEj1q5ceRIkKkfPmVuOwE5ZInXA8",
+        "title": "The Benefits of Traveling",
+        "content": "Traveling can broaden your horizons, expose you to new cultures, and create lasting memories. It can also help reduce stress and improve your mental health.",
+        "publishedAt": "2023-04-26T17:05:45.678Z",
+        "authorId": 6
+    },
+    {
+        "id": 7,
+        "image": "https://fastly.picsum.photos/id/354/200/200.jpg?hmac=ykMwenrB5tcaT_UHlYwh2ZzAZ4Km48YOmwJTFCiodJ4",
+        "title": "The Impact of Social Media",
+        "content": "Social media has changed the way we communicate and connect with others. It can be a powerful tool for sharing information and building relationships, but it can also have negative effects on mental health and self-esteem.",
+        "publishedAt": "2023-04-26T17:05:59.901Z",
+        "authorId": 8
+    },
+    {
+        "id": 8,
+        "image": "https://fastly.picsum.photos/id/180/200/200.jpg?hmac=YtJJ-CeQThqv_K6NzUnKS6Q8-tjxUVkSKeDsStrjEyM",
+        "title": "The Importance of Hydration",
+        "content": "Drinking enough water is essential for good health. It can help regulate body temperature, improve brain function, and keep your skin looking healthy.",
+        "publishedAt": "2023-04-26T17:06:14.213Z",
+        "authorId": 4
+    },
+    {
+        "id": 9,
+        "image": "https://fastly.picsum.photos/id/529/200/200.jpg?hmac=LiB-rmOEJ-iPyye6kU2u9mmHGs_o7w5wrCHbzlNX5b0",
+        "title": "The Benefits of Strength Training",
+        "content": "Strength training can help build muscle, increase bone density, and improve overall fitness. It can also boost metabolism and help with weight loss.",
+        "publishedAt": "2023-04-26T17:06:28.698Z",
+        "authorId": 10
+    },
+    {
+        "id": 10,
+        "image": "https://fastly.picsum.photos/id/293/200/200.jpg?hmac=6YL5khsW332VGbJLkqIfYLzyXyT1kj358PA64TJtKuw",
+        "title": "The Benefits of Running",
+        "content": "Running is a great way to improve your health and fitness. It can help you lose weight, build endurance, and reduce stress.",
+        "publishedAt": "2023-04-26T17:06:58.209Z",
+        "authorId": 8
+    }
+]

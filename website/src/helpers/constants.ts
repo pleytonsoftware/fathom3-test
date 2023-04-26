@@ -2,37 +2,46 @@ export const PAGES = {
     home: "/",
     signin: "/signin",
     signup: "/signup",
-    admin: {
-        index: "/admin",
-        users: "/admin/users",
-        user: "/admin/users/:id",
-    },
+    admin: "/admin/users",
     profile: {
         index: "/profile",
         sessions: "/profile/sessions",
     },
-    post: "/post/:id",
+    post: "/posts/:id",
+    users: "/admin/users/:id",
 } as const;
 
 export const API_INTERNAL_ENDPOINTS = {
     signin: "/api/auth/signin",
+    signout: "/api/auth/signout",
     verify: "/api/auth/verify",
     signup: "/api/auth/signup",
     profile: {
         index: "/api/users/:id",
         sessions: "/api/sessions",
-        sessionsIds: "/api/sessions/:id",
+        sessionIds: "/api/sessions/:id",
+    },
+    users: "/api/users",
+    posts: "/api/posts",
+    post: {
+        index: "/api/posts/:id",
     },
 } as const;
 
 export const API_ENDPOINTS = {
     signin: "auth/signin",
+    signout: "auth/signout",
     verify: "auth/verify",
     signup: "auth/signup",
     profile: {
         index: "users/:id",
         sessions: "sessions",
-        sessionsIds: "sessions/:id",
+        sessionIds: "sessions/:id",
+    },
+    users: "users",
+    posts: "posts",
+    post: {
+        index: "posts/:id",
     },
 } as const;
 
@@ -44,3 +53,8 @@ export const REQUEST_METHODS = {
     PUT: "PUT",
     DELETE: "DELETE",
 } as const;
+
+export const ROLES = {
+    admin: "admin",
+    user: "user",
+};

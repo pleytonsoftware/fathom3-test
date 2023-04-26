@@ -36,19 +36,6 @@ export const find: RouteHandlerMethod = async (req, reply) => {
     reply.send(post);
 };
 
-export const update: RouteHandlerMethod = async (req, reply) => {
-    const { id } = req.params as FindById;
-    const { title, content } = req.body as PostEditInputBody;
-    const user = (req as IUserRequest).authUser;
-
-    const post = await postService.update(Number(id), user.id, {
-        title,
-        content,
-    });
-
-    reply.send(post);
-};
-
 export const remove: RouteHandlerMethod = async (req, reply) => {
     const { id } = req.params as FindById;
     const user = (req as IUserRequest).authUser;

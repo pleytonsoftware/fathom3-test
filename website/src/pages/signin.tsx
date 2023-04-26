@@ -8,43 +8,32 @@ import {
     TextField,
     Typography,
 } from "@mui/material";
-import type { ErrorResponse } from "@/@types/api/error";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Link from "next/link";
 import { API_INTERNAL_ENDPOINTS, PAGES, TOKEN_NAME } from "@/helpers/constants";
 import axios, { AxiosError } from "axios";
-import { SignInData, SignInDataReturn } from "@/@types/auth/signin";
 import { useMutation } from "@tanstack/react-query";
-import { useAuthContext } from "@/components/context";
+import { useAuthContext } from "@/components/context/auth";
 import { useRouter } from "next/router";
 import { redirectIfUserIsAuthSSR, onSuccessAuth } from "@/helpers/auth";
 import statusCodes from "http-status-codes";
+import type { SignInData, SignInDataReturn } from "@/@types/auth/signin";
+import type { ErrorResponse } from "@/@types/api/error";
+import useSignIn from "@/hooks/mutations/useSignIn";
 
 const SignInPage: FC = () => {
     const [error, setError] = useState<ErrorResponse | null>(null);
     const { dispatch } = useAuthContext();
     const router = useRouter();
-    const signInMutation = useMutation<
-        SignInDataReturn,
-        AxiosError<ErrorResponse>,
-        SignInData
-    >(
-        async ({ email, password }) => {
-            const response = await axios.post(API_INTERNAL_ENDPOINTS.signin, {
-                email,
-                password,
+    const signInMutation = useSignIn((data) => {
+        if (data) onSuccessAuth(data, setError, dispatch, router);
+        else
+            setError({
+                error: "Something went wrong",
+                message: `Something went wrong, data: ${data}`,
+                statusCode: statusCodes.BAD_REQUEST,
             });
-            return response.data;
-        },
-        {
-            onSuccess: (data) => {
-                onSuccessAuth(data, setError, dispatch, router);
-            },
-            onError: (error) => {
-                setError(error.response!.data);
-            },
-        },
-    );
+    }, setError);
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();

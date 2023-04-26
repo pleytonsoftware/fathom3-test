@@ -9,6 +9,7 @@ import Container from "typedi";
 import { validatePassword } from "../helpers/validators";
 import UserService from "../services/user.service";
 import statusCodes from "http-status-codes";
+import SessionService from "../services/session.service";
 
 const authService = Container.get(AuthService);
 
@@ -16,6 +17,12 @@ export const signin: RouteHandlerMethod = async (req, reply) => {
     const { email, password } = req.body as SignInInputType;
 
     const signInOutput = await authService.signIn(email, password);
+
+    if (!signInOutput) {
+        return reply.code(statusCodes.UNAUTHORIZED).send({
+            message: "Email or password are not valid",
+        });
+    }
 
     reply.send(signInOutput);
 };
@@ -58,4 +65,16 @@ export const signup: RouteHandlerMethod = async (req, reply) => {
             .code(statusCodes.INTERNAL_SERVER_ERROR)
             .send({ message: "Error creating user", error });
     }
+};
+
+export const signout: RouteHandlerMethod = async (req, reply) => {
+    let token = req.headers.authorization;
+
+    if (token) {
+        const sessionService = Container.get(SessionService);
+        token = token.replace("Bearer ", "");
+        await sessionService.deleteSession(token);
+    }
+
+    reply.send();
 };

@@ -4,7 +4,10 @@ import type PostInput from "../@types/models/post/input";
 import EditPostInput from "../@types/models/post/edit";
 import { Post, User } from "@prisma/client";
 import ROLES from "../@types/models/user/roles";
+import PostItem, { PostDetailed } from "../@types/models/post/output";
 
+const DEFAULT_IMAGE =
+    "https://fastly.picsum.photos/id/638/200/200.jpg?hmac=64UpQ4ouFUNEG9cnXLQ9GxchDShg-mL1rdCrZGfc94U";
 @Service()
 class PostService {
     /**
@@ -17,13 +20,57 @@ class PostService {
      * @param {Date} [postInput.publishedAt] - Post publish date (optional)
      * @returns {Promise<Post>} Created post object
      */
-    public async create(postInput: PostInput): Promise<Post> {
+    public async create(postInput: PostInput): Promise<PostDetailed> {
+        let imageUrl = DEFAULT_IMAGE;
+        try {
+            const image = await fetch("https://picsum.photos/200");
+            imageUrl = image.url;
+        } catch (e) {}
+
         const post = await prisma.post.create({
             data: {
                 title: postInput.title,
+                image: imageUrl,
                 content: postInput.content,
                 authorId: postInput.authorId,
                 publishedAt: postInput.publishedAt,
+            },
+            select: {
+                id: true,
+                title: true,
+                author: {
+                    select: {
+                        id: true,
+                        email: true,
+                        firstName: true,
+                        lastName: true,
+                    },
+                },
+                _count: {
+                    select: {
+                        comments: true,
+                    },
+                },
+                image: true,
+                content: true,
+                createdAt: true,
+                updatedAt: true,
+                publishedAt: true,
+                comments: {
+                    orderBy: {
+                        createdAt: "asc",
+                    },
+                    include: {
+                        author: {
+                            select: {
+                                id: true,
+                                email: true,
+                                firstName: true,
+                                lastName: true,
+                            },
+                        },
+                    },
+                },
             },
         });
 
@@ -36,22 +83,54 @@ class PostService {
      * @param {number} postId - ID of the post to find
      * @returns {Promise<Post|null>} Found post object, or null if not found
      */
-    public async find(postId: number): Promise<Post | null> {
+    public async find(postId: number): Promise<PostDetailed | null> {
         const post = await prisma.post.findFirst({
             where: {
                 id: postId,
-                publishedAt: {
-                    gte: new Date(),
-                },
+                OR: [
+                    {
+                        publishedAt: {
+                            lte: new Date(),
+                        },
+                    },
+                    { publishedAt: null },
+                ],
                 deleted: false,
             },
-            include: {
+            select: {
+                id: true,
+                title: true,
+                author: {
+                    select: {
+                        id: true,
+                        email: true,
+                        firstName: true,
+                        lastName: true,
+                    },
+                },
+                _count: {
+                    select: {
+                        comments: true,
+                    },
+                },
+                image: true,
+                content: true,
+                createdAt: true,
+                updatedAt: true,
+                publishedAt: true,
                 comments: {
                     orderBy: {
                         createdAt: "asc",
                     },
                     include: {
-                        author: true,
+                        author: {
+                            select: {
+                                id: true,
+                                email: true,
+                                firstName: true,
+                                lastName: true,
+                            },
+                        },
                     },
                 },
             },
@@ -65,53 +144,43 @@ class PostService {
      * @async
      * @returns {Promise<Array<Post>>} Array of published post objects
      */
-    public async findAll(): Promise<Array<Post>> {
-        // TODO add pagination
+    public async findAll(): Promise<Array<PostItem>> {
         const posts = await prisma.post.findMany({
             where: {
-                publishedAt: {
-                    gte: new Date(),
-                },
+                OR: [
+                    {
+                        publishedAt: {
+                            lte: new Date(),
+                        },
+                    },
+                    { publishedAt: null },
+                ],
                 deleted: false,
             },
             orderBy: [{ publishedAt: "desc" }, { createdAt: "desc" }],
+            select: {
+                id: true,
+                title: true,
+                author: {
+                    select: {
+                        id: true,
+                        email: true,
+                        firstName: true,
+                        lastName: true,
+                    },
+                },
+                _count: {
+                    select: {
+                        comments: true,
+                    },
+                },
+                image: true,
+                publishedAt: true,
+                createdAt: true,
+            },
         });
 
         return posts;
-    }
-
-    /**
-     * Update a post by ID
-     * @async
-     * @param {number} postId - ID of the post to update
-     * @param {number} userId - ID of the user making the update
-     * @param {Object} editPostInput - Edited post input object
-     * @param {string} editPostInput.title - Post title
-     * @param {string} editPostInput.content - Post content
-     * @returns {Promise<Post|null>} Updated post object, or null if not found or unauthorized
-     */
-    public async update(
-        postId: number,
-        userId: number,
-        editPostInput: EditPostInput,
-    ): Promise<Post | null> {
-        const post = await this.find(postId);
-
-        if (post?.authorId !== userId) {
-            return null;
-        }
-
-        const updatedPost = await prisma.post.update({
-            data: {
-                title: editPostInput.title,
-                content: editPostInput.content,
-            },
-            where: {
-                id: postId,
-            },
-        });
-
-        return updatedPost;
     }
 
     /**
@@ -127,7 +196,7 @@ class PostService {
     ): Promise<boolean> {
         const post = await this.find(postId);
 
-        if (user.role !== ROLES.admin && post?.authorId !== user.id) {
+        if (user.role !== ROLES.admin && post?.author.id !== user.id) {
             return false;
         }
 

@@ -55,22 +55,6 @@ const postRoutes: FastifyPluginAsync = async (app) => {
     );
 
     /**
-     * Finds a post by ID and updates it.
-     * @function
-     * @async
-     * @param {Object} req - The HTTP request.
-     * @param {Object} res - The HTTP response.
-     */
-    app.put(
-        `${baseUserSubPath}:id`,
-        {
-            schema: postEditInputSchema,
-            preHandler: [checkValidRequest, checkValidUser],
-        },
-        postController.update,
-    );
-
-    /**
      * Finds a post by ID and deletes it.
      * @function
      * @async

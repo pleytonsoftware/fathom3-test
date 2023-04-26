@@ -1,10 +1,9 @@
 import { useState, type FC } from "react";
 import {
     Alert,
-    Box,
     IconButton,
+    LinearProgress,
     Paper,
-    TableHead,
     Toolbar,
     Tooltip,
     Typography,
@@ -12,31 +11,30 @@ import {
 import {
     DataGrid,
     GridColDef,
+    GridRowClassNameParams,
     GridRowParams,
-    GridValueGetterParams,
 } from "@mui/x-data-grid";
-import Session from "@/@types/model/session";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import axios, { AxiosError } from "axios";
-import { ErrorResponse } from "@/@types/api/error";
-import { API_INTERNAL_ENDPOINTS, TOKEN_NAME } from "@/helpers/constants";
-import { getHeadersWithToken, useAuthContext } from "@/components/context";
+import { TOKEN_NAME } from "@/helpers/constants";
+import { useAuthContext } from "@/components/context/auth";
 import Cookies from "js-cookie";
 import { checkUserIsAuthSSR } from "@/helpers/auth";
-import DeleteIcon from "@mui/icons-material/Delete";
+import type Session from "@/@types/model/session";
+import type { ErrorResponse } from "@/@types/api/error";
 import { MESSAGE_SUCCESS } from "@/helpers/messages";
-import { SessionData } from "@/@types/session/delete";
+import DeleteIcon from "@mui/icons-material/Delete";
+import useGetSessions from "@/hooks/queries/useGetSessions";
+import useRemoveSessionsMutation from "@/hooks/mutations/useDeleteSession";
 
 interface SessionRow extends Session {
     isCurrentSession: boolean;
 }
 
 const columnsDefinition: Array<GridColDef> = [
-    {
-        field: "id",
-        headerName: "ID",
-        width: 70,
-    },
+    // {
+    //     field: "id",
+    //     headerName: "ID",
+    //     width: 70,
+    // },
     {
         field: "token",
         headerName: "Token",
@@ -67,73 +65,30 @@ const Sessions: FC = () => {
     const [success, setSuccess] = useState<boolean>(false);
     const token = Cookies.get(TOKEN_NAME);
 
-    const { isFetching, isRefetching, refetch, isFetched } = useQuery<
-        Array<Session>,
-        AxiosError<ErrorResponse>
-    >({
-        queryKey: ["sessions", auth.user!.id], // TODO move to constants
-        queryFn: async () => {
-            const verifyResult = await axios.get(
-                API_INTERNAL_ENDPOINTS.profile.sessions,
-                {
-                    headers: getHeadersWithToken(),
-                },
+    const {
+        isFetching,
+        refetch,
+        error: getSessionsError,
+    } = useGetSessions((data) => {
+        if (data)
+            setRows(
+                data.map((session) => ({
+                    ...session,
+                    isCurrentSession: session.token === token,
+                    expiresAt: new Date(session.expiresAt).toLocaleString(),
+                    createdAt: new Date(session.createdAt).toLocaleString(),
+                })),
             );
-            return verifyResult.data;
-        },
-        onSuccess: (data) => {
-            if (data)
-                setRows(
-                    data.map((session) => ({
-                        ...session,
-                        isCurrentSession: session.token === token,
-                        expiresAt: new Date(session.expiresAt).toLocaleString(),
-                        createdAt: new Date(session.createdAt).toLocaleString(),
-                    })),
-                );
-        },
-        retryOnMount: false,
-        retry: false,
-        refetchOnWindowFocus: false,
-    });
-    const removeSessionsMutation = useMutation<
-        boolean,
-        AxiosError<ErrorResponse>,
-        SessionData
-    >(
-        async ({ ids }) => {
-            console.log({
-                api: API_INTERNAL_ENDPOINTS.profile.sessionsIds.replace(
-                    ":id",
-                    ids.join(","),
-                ),
-            });
-            const response = await axios.delete(
-                API_INTERNAL_ENDPOINTS.profile.sessionsIds.replace(
-                    ":id",
-                    ids.join(","),
-                ),
-                {
-                    headers: getHeadersWithToken(),
-                },
-            );
-            return response.data;
-        },
-        {
-            onMutate: (data) => {
-                setSuccess(false);
-                setError(null);
-            },
-            onSuccess: (data) => {
-                setSuccess(true);
-            },
-            onError: (error) => {
-                setError(error.response!.data);
-            },
-        },
+    }, auth.user?.id.toString());
+
+    const removeSessionsMutation = useRemoveSessionsMutation(
+        setSuccess,
+        setError,
+        refetch,
     );
 
     const numSelected = selectedRowsIds.length;
+    let anyError = getSessionsError || error;
 
     return (
         <Paper sx={{ width: "100%", minHeight: 350, p: 2 }}>
@@ -167,6 +122,7 @@ const Sessions: FC = () => {
                 {numSelected > 0 && (
                     <Tooltip title="Delete">
                         <IconButton
+                            disabled={isFetching}
                             sx={{
                                 color: (theme) =>
                                     theme.palette.error.contrastText,
@@ -183,6 +139,19 @@ const Sessions: FC = () => {
                 )}
             </Toolbar>
             <DataGrid
+                sx={(theme) => ({
+                    "& .active": {
+                        background: theme.palette.success.light,
+                        "&:hover": {
+                            background: theme.palette.success.light,
+                        },
+                    },
+                })}
+                getRowClassName={({
+                    row,
+                }: GridRowClassNameParams<SessionRow>) =>
+                    row.isCurrentSession ? "active" : ""
+                }
                 isRowSelectable={({ row }: GridRowParams<SessionRow>) =>
                     !row.isCurrentSession
                 }
@@ -206,14 +175,16 @@ const Sessions: FC = () => {
                 }}
                 checkboxSelection
             />
-            <Box>
-                {success ||
-                    (error && (
-                        <Alert severity={success ? "success" : "error"}>
-                            {success ? MESSAGE_SUCCESS : error?.message}
-                        </Alert>
-                    ))}
-            </Box>
+            {isFetching && <LinearProgress />}
+            {(success || anyError) && (
+                <Alert
+                    sx={{ mt: 1 }}
+                    severity={success ? "success" : "error"}
+                    variant="filled"
+                >
+                    {success ? MESSAGE_SUCCESS : anyError?.message}
+                </Alert>
+            )}
         </Paper>
     );
 };

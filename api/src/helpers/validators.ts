@@ -4,7 +4,7 @@ import { StatusCodes } from "http-status-codes";
 
 export const commonSchema = S.object()
     .id("common")
-    .definition("name", S.string().id("#name").minLength(4).maxLength(50))
+    .definition("name", S.string().id("#name").minLength(3).maxLength(50))
     .definition("id", S.number().id("#id").minimum(1))
     .definition(
         "password",

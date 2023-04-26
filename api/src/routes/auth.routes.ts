@@ -85,10 +85,9 @@ const authRoutes: FastifyPluginAsync = async (app) => {
     app.post(
         "/signout",
         {
-            // TODO add token input schema and controller
-            // schema: userInputSchema,
+            preHandler: [checkValidRequest, checkValidUser],
         },
-        authControllers.signup,
+        authControllers.signout,
     );
 };
 

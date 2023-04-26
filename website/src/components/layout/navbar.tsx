@@ -13,7 +13,7 @@ import { useState, FC, MouseEventHandler } from "react";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import { useRouter } from "next/router";
 import { PAGES, TOKEN_NAME } from "@/helpers/constants";
-import { useAuthContext } from "../context";
+import { useAuthContext } from "../context/auth";
 import Image from "next/image";
 import Link from "next/link";
 import Cookies from "js-cookie";
@@ -38,7 +38,7 @@ const navigation: Array<NavigationItem> = [
     },
     {
         text: "Admin",
-        href: PAGES.admin.index,
+        href: PAGES.admin,
         showIfRole: "admin",
     },
 ];
@@ -46,7 +46,7 @@ const navigation: Array<NavigationItem> = [
 const Navbar: FC = () => {
     const router = useRouter();
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-    const { auth } = useAuthContext();
+    const { auth, signOut } = useAuthContext();
 
     const closeMenu = () => {
         setAnchorEl(null);
@@ -58,7 +58,7 @@ const Navbar: FC = () => {
     return (
         <Box>
             <AppBar
-                position="static"
+                position="fixed"
                 sx={{
                     background: (theme) => theme.palette.secondary.main,
                 }}
@@ -171,9 +171,9 @@ const Navbar: FC = () => {
                                 Profile
                             </MenuItem>
                             <MenuItem
-                                onClick={() => {
+                                onClick={async () => {
                                     closeMenu();
-                                    Cookies.remove(TOKEN_NAME);
+                                    await signOut();
                                     router.pathname !== PAGES.home
                                         ? router.push(PAGES.home)
                                         : router.reload();

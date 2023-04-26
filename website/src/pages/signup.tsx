@@ -1,7 +1,7 @@
 import { ErrorResponse } from "@/@types/api/error";
 import { SignInDataReturn } from "@/@types/auth/signin";
 import { SignUpData } from "@/@types/auth/signup";
-import { useAuthContext } from "@/components/context";
+import { useAuthContext } from "@/components/context/auth";
 import { redirectIfUserIsAuthSSR, onSuccessAuth } from "@/helpers/auth";
 import { API_INTERNAL_ENDPOINTS, PAGES, TOKEN_NAME } from "@/helpers/constants";
 import {
@@ -18,35 +18,16 @@ import { useRouter } from "next/router";
 import { FC, useState } from "react";
 import statusCodes from "http-status-codes";
 import Link from "next/link";
+import useSignUp from "@/hooks/mutations/useSignUp";
 
 const SingUpPage: FC = () => {
     const [error, setError] = useState<ErrorResponse | null>(null);
     const { dispatch } = useAuthContext();
     const router = useRouter();
 
-    const signUpMutation = useMutation<
-        SignInDataReturn,
-        AxiosError<ErrorResponse>,
-        SignUpData
-    >(
-        async ({ email, password, repeatPassword, firstName, lastName }) => {
-            const response = await axios.post(API_INTERNAL_ENDPOINTS.signup, {
-                email,
-                password,
-                repeatPassword,
-                firstName,
-                lastName,
-            });
-            return response.data;
-        },
-        {
-            onSuccess: (data) => {
-                onSuccessAuth(data, setError, dispatch, router);
-            },
-            onError: (error) => {
-                setError(error.response!.data);
-            },
-        },
+    const signUpMutation = useSignUp(
+        (data) => onSuccessAuth(data, setError, dispatch, router),
+        setError,
     );
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {

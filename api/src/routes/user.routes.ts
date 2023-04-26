@@ -10,6 +10,7 @@ import {
 import userInputSchema from "../schemas/user/userInput";
 import userEditInputSchema from "../schemas/user/userEditInput";
 import { idParamInput } from "../schemas/common";
+import paginationSchema from "../schemas/user/paginationInput";
 
 const baseUserSubPath = "/";
 
@@ -28,6 +29,7 @@ const userRoutes: FastifyPluginAsync = async (app) => {
     app.get(
         baseUserSubPath,
         {
+            schema: paginationSchema,
             preHandler: [
                 checkValidRequest,
                 checkValidUser,

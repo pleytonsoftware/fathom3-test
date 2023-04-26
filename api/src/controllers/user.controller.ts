@@ -8,14 +8,51 @@ import UserService from "../services/user.service";
 import statusCodes from "http-status-codes";
 import { validatePassword } from "../helpers/validators";
 import { FindById } from "../@types/routes";
+import { PaginationQueryParam, PaginationQuery } from "../@types/routes/input";
+import { IUserRequest } from "../@types/routes/auth";
+import ROLES from "../@types/models/user/roles";
 
 const userService = Container.get(UserService);
 
 export const findAll: RouteHandlerMethod = async (req, reply) => {
-    // TODO add pagination
-    // TODO add validation
-    const users = await userService.findAll();
-    reply.send(users);
+    const {
+        offset,
+        size,
+        sortby_direction,
+        sortby_field,
+        filterby_key,
+        filterby_value,
+    } = req.query as PaginationQueryParam;
+
+    const usersPaginated = await userService.findAll({
+        pagination:
+            Number(offset) >= 0 && Number(size) > 0
+                ? {
+                      offset: Number(offset),
+                      size: Number(size),
+                  }
+                : undefined,
+        filterBy:
+            filterby_key && filterby_value
+                ? {
+                      key: filterby_key,
+                      value: Boolean(Number(filterby_value))
+                          ? Number(filterby_value)
+                          : filterby_value === "true" ||
+                            filterby_value === "false"
+                          ? filterby_value === "true"
+                          : filterby_value,
+                  }
+                : undefined,
+        sortBy:
+            sortby_field && sortby_direction
+                ? {
+                      field: sortby_field,
+                      direction: sortby_direction,
+                  }
+                : undefined,
+    });
+    reply.send(usersPaginated);
 };
 
 export const findByIdOrEmail: RouteHandlerMethod = async (req, reply) => {
@@ -70,14 +107,18 @@ export const create: RouteHandlerMethod = async (req, reply) => {
 };
 
 export const update: RouteHandlerMethod = async (req, reply) => {
-    // TODO check if user is the logged one
+    const user = (req as IUserRequest).authUser;
     const { id } = req.params as FindById;
-    const { firstName, lastName } = req.params as EditUserInput;
-    await userService.updateById(Number(id), { firstName, lastName });
+    const { firstName, lastName, role } = req.body as EditUserInput;
+
+    await userService.updateById(Number(id), {
+        firstName,
+        lastName,
+        role: user.role === ROLES.admin ? role : undefined,
+    });
 };
 
 export const remove: RouteHandlerMethod = async (req, reply) => {
-    // TODO check if user is the logged one
     const { id } = req.params as FindById;
 
     await userService.deleteById(Number(id));

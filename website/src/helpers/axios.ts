@@ -10,6 +10,7 @@ interface QueryParam<D> {
     endpoint: string;
     data?: D;
     headers?: NextApiRequest["headers"];
+    query?: NextApiRequest["query"];
 }
 
 export const query = async <T = any, R = AxiosResponse<T>, D = any>({
@@ -17,6 +18,7 @@ export const query = async <T = any, R = AxiosResponse<T>, D = any>({
     type = REQUEST_METHODS.GET,
     data,
     headers,
+    query,
 }: QueryParam<D>) => {
     const headersAuth = headers
         ? {
@@ -40,6 +42,7 @@ export const query = async <T = any, R = AxiosResponse<T>, D = any>({
         case REQUEST_METHODS.GET:
         default:
             return axios.get<T, R, D>(resolveAPI(endpoint), {
+                params: query,
                 headers: headersAuth,
             });
     }
@@ -51,6 +54,7 @@ export const safeQuery = async <T = any, R = AxiosResponse<T>, D = any>({
     data,
     headers,
     res,
+    query: queryParams,
 }: QueryParam<D> & {
     res: NextApiResponse<T | ErrorResponse>;
 }) => {
@@ -60,6 +64,7 @@ export const safeQuery = async <T = any, R = AxiosResponse<T>, D = any>({
             type,
             data,
             headers,
+            query: queryParams,
         });
         res.send(returnData.data);
     } catch (e) {

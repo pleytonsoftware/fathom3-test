@@ -155,7 +155,9 @@ export const checkValidUserUpdate: preHandlerHookHandler = async (
 
     if (
         Boolean(!authUser || !Number(requestedId)) ||
-        (authUser && authUser.id !== Number(requestedId))
+        (authUser &&
+            authUser.id !== Number(requestedId) &&
+            authUser.role !== ROLES.admin)
     ) {
         return replyWith(reply, {
             code: statusCodes.UNAUTHORIZED,
