@@ -5,6 +5,14 @@ import { PostComment } from "../@types/models/post/output";
 
 @Service()
 class CommentService {
+    /**
+     * Creates a new comment for a post
+     *
+     * @async
+     * @param {CommentInput} commentInput - An object containing the content, author ID, and post ID of the new comment
+     * @returns {Promise<PostComment>} - A promise that resolves to the newly created comment
+     * @throws {Error} - Throws an error if there is an issue creating the comment
+     */
     public async create(commentInput: CommentInput): Promise<PostComment> {
         const comment = await prisma.comment.create({
             data: {

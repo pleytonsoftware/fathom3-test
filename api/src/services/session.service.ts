@@ -38,6 +38,12 @@ class SessionService {
         return session;
     }
 
+    /**
+     * Checks whether the session is alive or not for a user.
+     * @param {number} userId - The ID of the user.
+     * @param {string} token - The session token.
+     * @returns {Promise<boolean>} Returns true if the session is alive for the user, otherwise returns false.
+     */
     public async checkSessionIsAlive(
         userId: number,
         token: string,
@@ -59,6 +65,11 @@ class SessionService {
         return session.userId === userId;
     }
 
+    /**
+     * Finds all sessions for a given user.
+     * @param {number} userId - The ID of the user.
+     * @returns {Promise<Array<Session>>} An array of Session objects.
+     */
     public async findAllSessionsForUser(
         userId: number,
     ): Promise<Array<Session>> {
@@ -75,6 +86,12 @@ class SessionService {
         return sessions;
     }
 
+    /**
+     * Deletes multiple sessions for a given user.
+     * @param {number} userId - The ID of the user.
+     * @param {Array<number>} sessionIds - An array of session IDs to be deleted.
+     * @returns {Promise<boolean>} Returns true if at least one session was deleted, otherwise returns false.
+     */
     public async deleteManySessions(
         userId: number,
         sessionIds: Array<number>,
@@ -95,6 +112,11 @@ class SessionService {
         return result.count > 0;
     }
 
+    /**
+     * Deletes a session with a given token.
+     * @param {string} token - The session token.
+     * @returns {Promise<boolean>} Returns true if the session was deleted, otherwise returns false.
+     */
     public async deleteSession(token: string): Promise<boolean> {
         if (!token) {
             return false;

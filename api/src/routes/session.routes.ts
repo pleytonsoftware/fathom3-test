@@ -8,6 +8,14 @@ const baseSessionSubPath = "/";
  * Registration of Session Routes
  */
 const sessionRoutes: FastifyPluginAsync = async (app) => {
+    /**
+     * Route handler for getting all sessions.
+     * @name getAll
+     * @function
+     * @async
+     * @param {Object} req - Request object.
+     * @param {Object} reply - Reply object.
+     */
     app.get(
         baseSessionSubPath,
         {
@@ -16,6 +24,14 @@ const sessionRoutes: FastifyPluginAsync = async (app) => {
         sessionControllers.getAll,
     );
 
+    /**
+     * Route handler for deleting multiple sessions.
+     * @name deleteMany
+     * @function
+     * @async
+     * @param {Object} req - Request object.
+     * @param {Object} reply - Reply object.
+     */
     app.delete(
         `${baseSessionSubPath}:ids`,
         {

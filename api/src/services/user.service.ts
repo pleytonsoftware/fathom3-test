@@ -9,13 +9,19 @@ import { PaginationQuery } from "../@types/routes/input";
 import log from "../helpers/logger";
 import { UserWithoutPassword } from "../@types/models/user/output";
 
-// TODO move to @types
 interface FindOptions {
     excludeDeleted?: boolean;
 }
 
 @Service()
 class UserService {
+    /**
+     * Finds a user by email.
+     * @param {string} email - The email of the user to find.
+     * @param {object} [options={}] - Additional options for the query.
+     * @param {boolean} [options.excludeDeleted=false] - Whether to exclude deleted users from the query.
+     * @returns {Promise<User>} A Promise that resolves to the User object or null if not found.
+     */
     public async findByEmail(
         email: UserInput["email"],
         { excludeDeleted }: FindOptions = {},
@@ -44,6 +50,13 @@ class UserService {
         return excludePassword(user);
     }
 
+    /**
+     * Finds a user by id.
+     * @param {number} id - The id of the user to find.
+     * @param {object} [options={}] - Additional options for the query.
+     * @param {boolean} [options.excludeDeleted=false] - Whether to exclude deleted users from the query.
+     * @returns {Promise<User>} A Promise that resolves to the User object or null if not found.
+     */
     public async findById(
         id: number,
         { excludeDeleted = false }: FindOptions = {},
@@ -72,6 +85,15 @@ class UserService {
         return excludePassword(user);
     }
 
+    /**
+     * Creates a new user.
+     * @param {object} userInput - The input data for creating a new user.
+     * @param {string} userInput.email - The email of the user to create.
+     * @param {string} userInput.password - The password of the user to create.
+     * @param {string} userInput.firstName - The first name of the user to create.
+     * @param {string} userInput.lastName - The last name of the user to create.
+     * @returns {Promise<User>} A Promise that resolves to the created User object or null if the user already exists.
+     */
     public async create({
         email,
         password,
@@ -99,6 +121,12 @@ class UserService {
         return excludePassword(user);
     }
 
+    /**
+     * Finds all users with optional pagination, sorting, and filtering options.
+     *
+     * @param opts - Optional query options for pagination, sorting, and filtering.
+     * @returns A promise containing an object with an array of users and the total number of users.
+     */
     public async findAll(opts?: PaginationQuery): Promise<{
         data: Array<UserWithoutPassword>;
         total: number;
@@ -141,6 +169,13 @@ class UserService {
         };
     }
 
+    /**
+     * Updates a user by ID with the provided fields.
+     *
+     * @param id - The ID of the user to update.
+     * @param updatedFields - An object containing the updated fields for the user.
+     * @returns A promise containing the updated user.
+     */
     public async updateById(id: number, updatedFields: EditUserInput) {
         if (!id) {
             log.debug("updateById(user) - id not found", id, updatedFields);
@@ -165,6 +200,12 @@ class UserService {
         return excludePassword(user);
     }
 
+    /**
+     * Soft-deletes a user by ID.
+     *
+     * @param id - The ID of the user to delete.
+     * @returns A promise containing a boolean indicating whether the user was successfully deleted.
+     */
     public async deleteById(id: number) {
         log.debug("deleteById(user) - id not found", id);
         const user = await prisma.user.update({

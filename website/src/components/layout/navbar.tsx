@@ -18,7 +18,6 @@ import Image from "next/image";
 import Link from "next/link";
 import Cookies from "js-cookie";
 
-// TODO send to ts file
 interface NavigationItem {
     text: string;
     href: string;

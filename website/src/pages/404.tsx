@@ -17,7 +17,7 @@ const Custom404: NextPage = (props) => {
             <Typography component="h2" variant="h2">
                 {MESSAGE_404_TITLE}
             </Typography>
-            <Typography component="h4" variant="h4">
+            <Typography component="h4" variant="h4" textAlign="center">
                 {MESSAGE_404_BODY}
             </Typography>
         </Box>

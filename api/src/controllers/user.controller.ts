@@ -14,6 +14,12 @@ import ROLES from "../@types/models/user/roles";
 
 const userService = Container.get(UserService);
 
+/**
+ * Route handler for finding all users
+ * @param {FastifyRequest} req - The incoming request object
+ * @param {FastifyReply} reply - The outgoing reply object
+ * @returns {Promise<void>} - A promise that resolves when the response is sent
+ */
 export const findAll: RouteHandlerMethod = async (req, reply) => {
     const {
         offset,
@@ -55,6 +61,12 @@ export const findAll: RouteHandlerMethod = async (req, reply) => {
     reply.send(usersPaginated);
 };
 
+/**
+ * Route handler for finding a user by ID or email
+ * @param {FastifyRequest} req - The incoming request object
+ * @param {FastifyReply} reply - The outgoing reply object
+ * @returns {Promise<void>} - A promise that resolves when the response is sent
+ */
 export const findByIdOrEmail: RouteHandlerMethod = async (req, reply) => {
     const { idOrEmail } = req.params as FindByIdOrEmailParams;
 
@@ -78,6 +90,12 @@ export const findByIdOrEmail: RouteHandlerMethod = async (req, reply) => {
     reply.send(user);
 };
 
+/**
+ * Route handler for creating a new user
+ * @param {FastifyRequest} req - The incoming request object
+ * @param {FastifyReply} reply - The outgoing reply object
+ * @returns {Promise<void>} - A promise that resolves when the response is sent
+ */
 export const create: RouteHandlerMethod = async (req, reply) => {
     const { email, password, repeatPassword, firstName, lastName } =
         req.body as UserInput;
@@ -106,6 +124,12 @@ export const create: RouteHandlerMethod = async (req, reply) => {
     }
 };
 
+/**
+ * Route handler for updating a user
+ * @param {FastifyRequest} req - The incoming request object
+ * @param {FastifyReply} reply - The outgoing reply object
+ * @returns {Promise<void>} - A promise that resolves when the response is sent
+ */
 export const update: RouteHandlerMethod = async (req, reply) => {
     const user = (req as IUserRequest).authUser;
     const { id } = req.params as FindById;
@@ -118,6 +142,12 @@ export const update: RouteHandlerMethod = async (req, reply) => {
     });
 };
 
+/**
+ * Route handler for deleting a user
+ * @param {FastifyRequest} req - The incoming request object
+ * @param {FastifyReply} reply - The outgoing reply object
+ * @returns {Promise<void>} - A promise that resolves when the response is sent
+ */
 export const remove: RouteHandlerMethod = async (req, reply) => {
     const { id } = req.params as FindById;
 

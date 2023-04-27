@@ -22,7 +22,7 @@ const useCustomQuery = <T, E>({
     queryFnParams,
 }: UseCustomQueryParams<T, E>) =>
     useQuery<T, E>({
-        queryKey: queryKey, // TODO move to constants
+        queryKey: queryKey,
         queryFn: async () => {
             const params = queryFnParams && queryFnParams();
             const verifyResult = await axios.get(endpoint, {

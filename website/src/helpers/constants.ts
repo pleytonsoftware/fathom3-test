@@ -9,6 +9,7 @@ export const PAGES = {
     },
     post: "/posts/:id",
     users: "/admin/users/:id",
+    not_found: "/404",
 } as const;
 
 export const API_INTERNAL_ENDPOINTS = {
@@ -57,4 +58,12 @@ export const REQUEST_METHODS = {
 export const ROLES = {
     admin: "admin",
     user: "user",
+};
+
+export const QUERY_KEYS = {
+    users: "users",
+    post: "post",
+    posts: "posts",
+    sessions: "sessions",
+    authUser: "authUser",
 };

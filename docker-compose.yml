@@ -1,10 +1,44 @@
-version: "3.8"
+version: '3.9'
 
 services:
-  app:
-    container_name: fathom3-test-website-c
-    image: fathom3-test-website-i
-    build:
-      context: .
+  postgres:
+    image: postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: mysecretpassword
     ports:
-      - 8080:80
+      - 5432:5432
+    networks:
+      - app-network
+
+  api:
+    build: ./api
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgres://postgres:mysecretpassword@postgres:5432/fathom3_db
+      JWT_SECRET: '#JfL7z@p9r$K8'
+    ports:
+      - 4020:4020
+    networks:
+      - app-network
+    command: >
+      sh -c "npx prisma generate && npx prisma migrate deploy && npx prisma db seed && npm run start"
+
+  website:
+    build: ./website
+    depends_on:
+      - api
+    environment:
+      ENDPOINT: http://api:4020
+    ports:
+      - 3000:3000
+    networks:
+      - app-network
+
+networks:
+  app-network:
+
+volumes:
+  postgres-data:

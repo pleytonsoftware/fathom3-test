@@ -1,10 +1,13 @@
-import { Alert, Box, IconButton, TextField } from "@mui/material";
+import { Alert, Box, Button, IconButton, TextField } from "@mui/material";
 import { useState, type FC } from "react";
 import SendIcon from "@mui/icons-material/Send";
 import useAddComment from "@/hooks/mutations/useAddComment";
 import { useRouter } from "next/router";
 import type { ErrorResponse } from "@/@types/api/error";
 import { PostComment } from "@/@types/model/post";
+import { useAuthContext } from "../context/auth";
+import Link from "next/link";
+import { PAGES } from "@/helpers/constants";
 
 export interface AddCommentProps {
     onAddedComment: (newComment: PostComment) => void;
@@ -13,6 +16,7 @@ export interface AddCommentProps {
 const AddComment: FC<AddCommentProps> = ({ onAddedComment }) => {
     const [error, setError] = useState<ErrorResponse | null>(null);
     const [content, setContent] = useState<string>("");
+    const { auth } = useAuthContext();
     const router = useRouter();
     const postId = router.query.id;
 
@@ -49,28 +53,50 @@ const AddComment: FC<AddCommentProps> = ({ onAddedComment }) => {
                 display="flex"
                 onSubmit={handleSubmit}
             >
-                <TextField
-                    value={content}
-                    onChange={(evt) => setContent(evt.target.value)}
-                    margin="normal"
-                    fullWidth
-                    name="content"
-                    label="Content"
-                    type="text"
-                    id="content"
-                    required
-                />
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignSelf: "center",
-                    }}
-                >
-                    <IconButton type="submit" sx={{ ml: 1 }}>
-                        <SendIcon color="primary" />
-                    </IconButton>
-                </Box>
+                {auth.user ? (
+                    <>
+                        <TextField
+                            value={content}
+                            onChange={(evt) => setContent(evt.target.value)}
+                            margin="normal"
+                            fullWidth
+                            name="content"
+                            label="Content"
+                            type="text"
+                            id="content"
+                            required
+                        />
+                        <Box
+                            sx={{
+                                display: "flex",
+                                flexDirection: "column",
+                                alignSelf: "center",
+                            }}
+                        >
+                            <IconButton type="submit" sx={{ ml: 1 }}>
+                                <SendIcon color="primary" />
+                            </IconButton>
+                        </Box>
+                    </>
+                ) : (
+                    <Alert
+                        sx={{
+                            flex: "1 0",
+                            mt: 2,
+                        }}
+                        severity="info"
+                    >
+                        <Button
+                            variant="text"
+                            LinkComponent={Link}
+                            href={PAGES.signin}
+                            color="inherit"
+                        >
+                            SignIn
+                        </Button>{" "}
+                        to comment
+                    </Alert>
+                )}
             </Box>
             {error && <Alert severity="error">{error?.message}</Alert>}
         </>

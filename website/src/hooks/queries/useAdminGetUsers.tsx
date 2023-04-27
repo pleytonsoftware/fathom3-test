@@ -1,5 +1,5 @@
 import useCustomQuery from ".";
-import { API_INTERNAL_ENDPOINTS } from "@/helpers/constants";
+import { API_INTERNAL_ENDPOINTS, QUERY_KEYS } from "@/helpers/constants";
 import type { Pagination, PaginationResult } from "@/@types/api/pagination";
 import type User from "@/@types/model/user";
 import type { AxiosError } from "axios";
@@ -13,7 +13,7 @@ const useAdminGetUsers = ({
     onSuccess: (data: PaginationResult<User>) => void;
 }) =>
     useCustomQuery<PaginationResult<User>, AxiosError<ErrorResponse>>({
-        queryKey: ["users"], // TODO move to constants
+        queryKey: [QUERY_KEYS.users],
         endpoint: API_INTERNAL_ENDPOINTS.users,
         queryFnParams: () =>
             ({

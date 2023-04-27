@@ -6,6 +6,12 @@ import { DeleteManyParams } from "../@types/routes/session";
 
 const sessionService = Container.get(SessionService);
 
+/**
+ * Get all sessions for the authenticated user
+ *
+ * @route GET /api/sessions
+ * @security BearerAuth
+ */
 export const getAll: RouteHandlerMethod = async (req, reply) => {
     const user = (req as IUserRequest).authUser;
     const sessions = await sessionService.findAllSessionsForUser(user.id);
@@ -13,6 +19,12 @@ export const getAll: RouteHandlerMethod = async (req, reply) => {
     reply.send(sessions);
 };
 
+/**
+ * Delete multiple sessions for the authenticated user
+ *
+ * @route DELETE /api/sessions/:ids
+ * @security BearerAuth
+ */
 export const deleteMany: RouteHandlerMethod = async (req, reply) => {
     const user = (req as IUserRequest).authUser;
     const ids = (req.params as DeleteManyParams).ids

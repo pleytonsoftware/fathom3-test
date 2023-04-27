@@ -110,8 +110,6 @@ export const checkValidUser: preHandlerHookHandler = async (
             return replyWith(reply, { code: statusCodes.UNAUTHORIZED });
         }
 
-        // TODO temp, look for ts solution
-        // ! temp
         (request as IUserRequest).authUser = user;
     } catch (error) {
         return replyWith(reply, {

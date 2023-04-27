@@ -1,0 +1,727 @@
+{
+	"info": {
+		"_postman_id": "f851ff43-656c-4314-933c-f83cf90415f8",
+		"name": "Fathom3 Test by Pablo Leyton",
+		"description": "# Introduction\nTechAPI is a Node.js API application built using Typescript, Prisma, Postgres, and Fastify. It provides CRUD operations, login and user management features, and more. The API can be used to manage user accounts, create, read, update, and delete user data, and authenticate users for secure access to protected resources.\n\n# Overview\nDevelopers should be familiar with Node.js, Typescript, Prisma, Postgres, and Fastify. They should understand how to create API endpoints, handle HTTP requests and responses, and manage user authentication and authorization. Additionally, developers should be aware of any specific API conventions or requirements, such as acceptable input and output formats, error handling strategies, and rate limiting policies.\n\n# Authentication\nThe preferred way of using the TechAPI is by making HTTP requests to the appropriate API endpoints. These requests should be properly formatted and include any necessary authentication credentials. Developers can refer to the API documentation or Postman collection for details on how to make requests to the API.\n\n# Error Codes\nUsers can expect to receive a variety of HTTP status codes and error messages when using the TechAPI. For example, a user attempting to create a new user account with an email address that already exists in the system might receive a 409 Conflict status code and an error message indicating that the email address is already in use. Similarly, a user attempting to access a protected resource without proper authentication credentials might receive a 401 Unauthorized status code and an error message indicating that access is denied.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "10120811"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "FindUsers",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:4020/users?size=2&offset=0&sortby_field=id&sortby_direction=desc",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"users"
+							],
+							"query": [
+								{
+									"key": "size",
+									"value": "2"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								},
+								{
+									"key": "filterby_key",
+									"value": "role",
+									"disabled": true
+								},
+								{
+									"key": "filterby_value",
+									"value": "admin",
+									"disabled": true
+								},
+								{
+									"key": "sortby_field",
+									"value": "id"
+								},
+								{
+									"key": "sortby_direction",
+									"value": "desc"
+								}
+							]
+						},
+						"description": "This endpoint retrieves a list of all users in the system. The response includes an array of user objects, each containing the user's ID, email, first name, last name, and creation and update timestamps. This endpoint can be used for displaying a list of users or retrieving user data for the purpose of editing or updating."
+					},
+					"response": [
+						{
+							"name": "Default",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://localhost:4020/users",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "4020",
+									"path": [
+										"users"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "FindUserByIdOrEmail",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:4020/users/:idOrEmail",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"users",
+								":idOrEmail"
+							],
+							"variable": [
+								{
+									"key": "idOrEmail",
+									"value": "3"
+								}
+							]
+						},
+						"description": "This endpoint retrieves a specific user by ID. The response includes the user's ID, email, first name, last name, and creation and update timestamps. This endpoint can be used for displaying detailed information about a specific user."
+					},
+					"response": [
+						{
+							"name": "Default",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://localhost:4020/users/:id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "4020",
+									"path": [
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id"
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "CreateUser",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"das@das.das2\",\n    \"password\": \"password\",\n    \"repeatPassword\": \"password\",\n    \"firstName\": \"dasadas\",\n    \"lastName\": \"dasadas\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4020/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"users"
+							]
+						},
+						"description": "This endpoint creates a new user in the system. The request body should contain the user's email, password, first name, and last name. Upon successful creation of the user, the endpoint returns a 201 status code and a message indicating that the user was created successfully."
+					},
+					"response": [
+						{
+							"name": "Default",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://localhost:4020/users",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "4020",
+									"path": [
+										"users"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "UpdateUser",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4020/users/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"users",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						},
+						"description": "This endpoint updates an existing user by ID. The request body should contain the fields to be updated, including the user's email, password, first name, and last name. Upon successful update of the user, the endpoint returns a 200 status code and a message indicating that the user was updated successfully."
+					},
+					"response": [
+						{
+							"name": "Default",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://localhost:4020/users/:id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "4020",
+									"path": [
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id"
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "DeleteUser",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:4020/users/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"users",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": null
+								}
+							]
+						},
+						"description": "This endpoint deletes an existing user by ID. Upon successful deletion of the user, the endpoint returns a 204 status code and no content in the response body. This endpoint can be used for deleting users who are no longer needed in the system."
+					},
+					"response": [
+						{
+							"name": "Default",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://localhost:4020/users/:id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "4020",
+									"path": [
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id"
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": ""
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Sign In",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@pleytonsoftware.com\",\n    \"password\": \"admin123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4020/auth/signin",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"auth",
+								"signin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sign Up",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"amandasmith1@example.com\",\n  \"password\": \"mypassword555\",\n  \"repeatPassword\": \"mypassword555\",\n  \"firstName\": \"Amanda\"//,\n//   \"lastName\": \"Smith\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4020/auth/signup",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"auth",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Posts",
+			"item": [
+				{
+					"name": "GetPosts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4020/posts",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"posts"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "GetPosts",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:4020/posts",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "4020",
+									"path": [
+										"posts"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Cross-Origin-Embedder-Policy",
+									"value": "require-corp"
+								},
+								{
+									"key": "Cross-Origin-Opener-Policy",
+									"value": "same-origin"
+								},
+								{
+									"key": "Cross-Origin-Resource-Policy",
+									"value": "same-origin"
+								},
+								{
+									"key": "X-DNS-Prefetch-Control",
+									"value": "off"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=15552000; includeSubDomains"
+								},
+								{
+									"key": "X-Download-Options",
+									"value": "noopen"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Origin-Agent-Cluster",
+									"value": "?1"
+								},
+								{
+									"key": "X-Permitted-Cross-Domain-Policies",
+									"value": "none"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "no-referrer"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "access-control-allow-origin",
+									"value": "*"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "3475"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 27 Apr 2023 22:44:35 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=72"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": 10,\n        \"title\": \"The Benefits of Running\",\n        \"author\": {\n            \"id\": 8,\n            \"email\": \"tomwilson@example.com\",\n            \"firstName\": \"Tom\",\n            \"lastName\": \"Wilson\"\n        },\n        \"image\": \"https://fastly.picsum.photos/id/293/200/200.jpg?hmac=6YL5khsW332VGbJLkqIfYLzyXyT1kj358PA64TJtKuw\",\n        \"publishedAt\": \"2023-04-26T17:06:58.209Z\",\n        \"createdAt\": \"2023-04-27T17:02:02.885Z\",\n        \"_count\": {\n            \"comments\": 2\n        }\n    },\n    {\n        \"id\": 9,\n        \"title\": \"The Benefits of Strength Training\",\n        \"author\": {\n            \"id\": 10,\n            \"email\": \"chrisharris@example.com\",\n            \"firstName\": \"Chris\",\n            \"lastName\": \"Harris\"\n        },\n        \"image\": \"https://fastly.picsum.photos/id/529/200/200.jpg?hmac=LiB-rmOEJ-iPyye6kU2u9mmHGs_o7w5wrCHbzlNX5b0\",\n        \"publishedAt\": \"2023-04-26T17:06:28.698Z\",\n        \"createdAt\": \"2023-04-27T17:02:02.880Z\",\n        \"_count\": {\n            \"comments\": 1\n        }\n    },\n    {\n        \"id\": 8,\n        \"title\": \"The Importance of Hydration\",\n        \"author\": {\n            \"id\": 4,\n            \"email\": \"mikejones@example.com\",\n            \"firstName\": \"Mike\",\n            \"lastName\": \"Jones\"\n        },\n        \"image\": \"https://fastly.picsum.photos/id/180/200/200.jpg?hmac=YtJJ-CeQThqv_K6NzUnKS6Q8-tjxUVkSKeDsStrjEyM\",\n        \"publishedAt\": \"2023-04-26T17:06:14.213Z\",\n        \"createdAt\": \"2023-04-27T17:02:02.875Z\",\n        \"_count\": {\n            \"comments\": 1\n        }\n    },\n    {\n        \"id\": 7,\n        \"title\": \"The Impact of Social Media\",\n        \"author\": {\n            \"id\": 8,\n            \"email\": \"tomwilson@example.com\",\n            \"firstName\": \"Tom\",\n            \"lastName\": \"Wilson\"\n        },\n        \"image\": \"https://fastly.picsum.photos/id/354/200/200.jpg?hmac=ykMwenrB5tcaT_UHlYwh2ZzAZ4Km48YOmwJTFCiodJ4\",\n        \"publishedAt\": \"2023-04-26T17:05:59.901Z\",\n        \"createdAt\": \"2023-04-27T17:02:02.870Z\",\n        \"_count\": {\n            \"comments\": 1\n        }\n    },\n    {\n        \"id\": 6,\n        \"title\": \"The Benefits of Traveling\",\n        \"author\": {\n            \"id\": 6,\n            \"email\": \"davidbrown@example.com\",\n            \"firstName\": \"David\",\n            \"lastName\": \"Brown\"\n        },\n        \"image\": \"https://fastly.picsum.photos/id/137/200/200.jpg?hmac=qhNK8PzcRQJaCJlGEj1q5ceRIkKkfPmVuOwE5ZInXA8\",\n        \"publishedAt\": \"2023-04-26T17:05:45.678Z\",\n        \"createdAt\": \"2023-04-27T17:02:02.864Z\",\n        \"_count\": {\n            \"comments\": 1\n        }\n    },\n    {\n        \"id\": 5,\n        \"title\": \"The Power of Positive Thinking\",\n        \"author\": {\n            \"id\": 2,\n            \"email\": \"johndoe@example.com\",\n            \"firstName\": \"John\",\n            \"lastName\": \"Doe\"\n        },\n        \"image\": \"https://fastly.picsum.photos/id/505/200/200.jpg?hmac=c295sjTIAZ_9Gj-PENrzAbATNIiWPL1dmhIhWndYnyo\",\n        \"publishedAt\": \"2023-04-26T17:05:31.235Z\",\n        \"createdAt\": \"2023-04-27T17:02:02.859Z\",\n        \"_count\": {\n            \"comments\": 1\n        }\n    },\n    {\n        \"id\": 4,\n        \"title\": \"The Benefits of Meditation\",\n        \"author\": {\n            \"id\": 5,\n            \"email\": \"sarahsmith@example.com\",\n            \"firstName\": \"Sarah\",\n            \"lastName\": \"Smith\"\n        },\n        \"image\": \"https://fastly.picsum.photos/id/276/200/200.jpg?hmac=nEmegloU9V9ajpTC6GdgRRIz-d0EliWd5cQ-F1olB54\",\n        \"publishedAt\": \"2023-04-26T16:48:56.016Z\",\n        \"createdAt\": \"2023-04-27T17:02:02.852Z\",\n        \"_count\": {\n            \"comments\": 1\n        }\n    },\n    {\n        \"id\": 3,\n        \"title\": \"The Future of Artificial Intelligence\",\n        \"author\": {\n            \"id\": 9,\n            \"email\": \"jessicamiller@example.com\",\n            \"firstName\": \"Jessica\",\n            \"lastName\": \"Miller\"\n        },\n        \"image\": \"https://fastly.picsum.photos/id/848/200/200.jpg?hmac=9pGbbeC1Q-zsi7TeMrGb93-TjKBmqPVY-tYuubIIqyw\",\n        \"publishedAt\": \"2023-04-26T16:48:41.534Z\",\n        \"createdAt\": \"2023-04-27T17:02:02.847Z\",\n        \"_count\": {\n            \"comments\": 1\n        }\n    },\n    {\n        \"id\": 2,\n        \"title\": \"The Importance of Sleep\",\n        \"author\": {\n            \"id\": 1,\n            \"email\": \"admin@pleytonsoftware.com\",\n            \"firstName\": \"Admin\",\n            \"lastName\": null\n        },\n        \"image\": \"https://fastly.picsum.photos/id/954/200/200.jpg?hmac=U_V-b3xGbMM1KTSaB5KKqncFD4fmOVG5iK39Bjd9DoQ\",\n        \"publishedAt\": \"2023-04-26T16:48:27.121Z\",\n        \"createdAt\": \"2023-04-27T17:02:02.841Z\",\n        \"_count\": {\n            \"comments\": 1\n        }\n    },\n    {\n        \"id\": 1,\n        \"title\": \"The Rise of E-commerce\",\n        \"author\": {\n            \"id\": 3,\n            \"email\": \"janedoe@example.com\",\n            \"firstName\": \"Jane\",\n            \"lastName\": \"Doe\"\n        },\n        \"image\": \"https://fastly.picsum.photos/id/656/200/300.jpg?hmac=zNqhDDzELUTnZCZ7v7jsgm_qu5rVv4qCgahu6YqfG_A\",\n        \"publishedAt\": \"2023-04-26T16:48:12.791Z\",\n        \"createdAt\": \"2023-04-27T17:02:02.832Z\",\n        \"_count\": {\n            \"comments\": 0\n        }\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "GetPost",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4020/posts/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"posts",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreatePost",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"A new post title\",\n    \"content\": \"The quick brown fox jumps over the lazy dog. Pack my box with five dozen liquor jugs.\"\n    //,\"publishedAt\": \"2023-05-27T22:51:13.361Z\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4020/posts",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddComment",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"content\": \"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod risus ac turpis dictum, ac faucibus sapien varius.\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4020/posts/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"posts",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeletePost",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4020/posts/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"posts",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Sessions",
+			"item": [
+				{
+					"name": "GetSessions Copy",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteSessions",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4020/sessions/:ids",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"sessions",
+								":ids"
+							],
+							"variable": [
+								{
+									"key": "ids",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjM0LCJlbWFpbCI6ImFtYW5kYXNtaXRoMUBleGFtcGxlLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNjgyNjM1NjIwLCJleHAiOjE3NjkwMzU2MjB9.2-LRakfmdwFnnmT9i2hmEiR9Ri6FhoOnVDpyLERyaO8",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

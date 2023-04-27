@@ -42,7 +42,7 @@ export const getTimeAgo = (
     const { value, unit } = getUnitAndValueDate(secondsElapsed) || {};
     if (!value || !unit) {
         if (secondsElapsed > 0) {
-            return "Just now!";
+            return "Just now";
         }
         return date.toLocaleString();
     }

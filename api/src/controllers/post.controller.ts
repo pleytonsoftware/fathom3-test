@@ -9,6 +9,12 @@ import CommentService from "../services/comment.service";
 
 const postService = Container.get(PostService);
 
+/**
+ * Creates a new post.
+ * @param {import("fastify").FastifyRequest} req - The request object.
+ * @param {import("fastify").FastifyReply} reply - The reply object.
+ * @returns {Promise<void>}
+ */
 export const create: RouteHandlerMethod = async (req, reply) => {
     const { title, content, publishedAt } = req.body as PostInputBody;
     const user = (req as IUserRequest).authUser;
@@ -23,12 +29,23 @@ export const create: RouteHandlerMethod = async (req, reply) => {
     reply.send(post);
 };
 
+/**
+ * Finds all posts.
+ * @param {import("fastify").FastifyRequest} req - The request object.
+ * @param {import("fastify").FastifyReply} reply - The reply object.
+ * @returns {Promise<void>}
+ */
 export const findAll: RouteHandlerMethod = async (req, reply) => {
-    // TODO pagination (FindAllOptions type)
     const posts = await postService.findAll();
     reply.send(posts);
 };
 
+/**
+ * Finds a post by ID.
+ * @param {import("fastify").FastifyRequest} req - The request object.
+ * @param {import("fastify").FastifyReply} reply - The reply object.
+ * @returns {Promise<void>}
+ */
 export const find: RouteHandlerMethod = async (req, reply) => {
     const { id } = req.params as FindById;
     const post = await postService.find(Number(id));
@@ -36,6 +53,12 @@ export const find: RouteHandlerMethod = async (req, reply) => {
     reply.send(post);
 };
 
+/**
+ * Removes a post.
+ * @param {import("fastify").FastifyRequest} req - The request object.
+ * @param {import("fastify").FastifyReply} reply - The reply object.
+ * @returns {Promise<void>}
+ */
 export const remove: RouteHandlerMethod = async (req, reply) => {
     const { id } = req.params as FindById;
     const user = (req as IUserRequest).authUser;
@@ -45,6 +68,12 @@ export const remove: RouteHandlerMethod = async (req, reply) => {
     reply.send(deleted);
 };
 
+/**
+ * Adds a comment to a post.
+ * @param {import("fastify").FastifyRequest} req - The request object.
+ * @param {import("fastify").FastifyReply} reply - The reply object.
+ * @returns {Promise<void>}
+ */
 export const addComment: RouteHandlerMethod = async (req, reply) => {
     const { id } = req.params as FindById;
     const user = (req as IUserRequest).authUser;

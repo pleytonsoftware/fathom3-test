@@ -13,6 +13,14 @@ import SessionService from "../services/session.service";
 
 const authService = Container.get(AuthService);
 
+/**
+ * Handles user sign in requests.
+ * @function
+ * @async
+ * @param {import('fastify').FastifyRequest} req - The HTTP request object.
+ * @param {import('fastify').FastifyReply} reply - The HTTP response object.
+ * @returns {Promise<void>}
+ */
 export const signin: RouteHandlerMethod = async (req, reply) => {
     const { email, password } = req.body as SignInInputType;
 
@@ -27,11 +35,27 @@ export const signin: RouteHandlerMethod = async (req, reply) => {
     reply.send(signInOutput);
 };
 
+/**
+ * Handles user verification requests.
+ * @function
+ * @async
+ * @param {import('../types').IUserRequest} req - The HTTP request object, which must contain an authenticated user.
+ * @param {import('fastify').FastifyReply} reply - The HTTP response object.
+ * @returns {Promise<void>}
+ */
 export const verify: RouteHandlerMethod = async (req, reply) => {
     const user = (req as IUserRequest).authUser;
     reply.send(user);
 };
 
+/**
+ * Handles user sign up requests.
+ * @function
+ * @async
+ * @param {import('fastify').FastifyRequest} req - The HTTP request object.
+ * @param {import('fastify').FastifyReply} reply - The HTTP response object.
+ * @returns {Promise<void>}
+ */
 export const signup: RouteHandlerMethod = async (req, reply) => {
     const userService = Container.get(UserService);
     const { email, password, repeatPassword, firstName, lastName } =
@@ -67,6 +91,14 @@ export const signup: RouteHandlerMethod = async (req, reply) => {
     }
 };
 
+/**
+ * Handles user sign out requests.
+ * @function
+ * @async
+ * @param {import('fastify').FastifyRequest} req - The HTTP request object.
+ * @param {import('fastify').FastifyReply} reply - The HTTP response object.
+ * @returns {Promise<void>}
+ */
 export const signout: RouteHandlerMethod = async (req, reply) => {
     let token = req.headers.authorization;
 

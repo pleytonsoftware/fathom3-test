@@ -36,8 +36,11 @@ const startServer = async () => {
 
         await fastifyApp.listen({
             port: PORT,
+            host: config.ADDRESS,
         });
-        fastifyApp.log.info(`Server started on http://localhost:3000`);
+        fastifyApp.log.info(
+            `Server started on http://${config.ADDRESS}:${PORT}`,
+        );
     } catch (err) {
         fastifyApp.log.error(err);
         process.exit(1);
